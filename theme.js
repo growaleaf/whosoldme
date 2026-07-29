@@ -144,7 +144,7 @@ const T = pickTheme();
   set("logo",T.nameHtml); set("tagline",T.tagline); set("privacyPill",T.privacy);
   set("msgLabel",T.inputLabel); set("msgHint",T.inputHint); set("go",T.cta);
   const mf=document.querySelector('link[rel="manifest"]');
-  if(mf) mf.setAttribute("href","manifest-"+T.id+".webmanifest?v=4");
+  if(mf) mf.setAttribute("href","manifest-"+T.id+".webmanifest?v=5");
   const ti=document.getElementById("touchIcon");
   if(ti) ti.setAttribute("href","icon-"+T.id+"-192.png");
 })();

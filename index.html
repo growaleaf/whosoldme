@@ -27,8 +27,10 @@ body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--font,-apple-syste
 header{padding:40px 0 8px;text-align:center}
 .logo{font-size:31px;font-weight:var(--logoW,800);letter-spacing:var(--logoS,-.02em);text-transform:var(--logoT,none)}.logo .a{color:var(--accent)}
 .tag{color:var(--dim);margin-top:8px;font-size:16px}
-.privacy{display:inline-flex;align-items:center;gap:7px;margin-top:15px;background:rgba(94,234,212,.08);
-  border:1px solid rgba(94,234,212,.25);color:var(--accent);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600}
+.privacy{display:inline-flex;align-items:center;gap:7px;margin-top:15px;
+  background:color-mix(in srgb,var(--accent) 8%,transparent);
+  border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);
+  color:var(--accent);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-top:20px}
 label{display:block;font-weight:700;font-size:14px;margin-bottom:7px}
 .hint{color:var(--dimmer);font-size:13px;font-weight:400;margin-bottom:10px}
@@ -70,7 +72,7 @@ button{font-family:inherit}
 .chain{position:relative;padding-left:26px}
 .chain:before{content:"";position:absolute;left:7px;top:8px;bottom:16px;width:2px;background:linear-gradient(var(--accent),transparent)}
 .stage{position:relative;padding-bottom:20px}
-.stage:before{content:"";position:absolute;left:-24px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(94,234,212,.16)}
+.stage:before{content:"";position:absolute;left:-24px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
 .stage .st{font-weight:700;font-size:15px}.stage .sd{color:var(--dim);font-size:14.5px;margin-top:3px}
 .vendors{margin-top:7px;display:flex;flex-wrap:wrap;gap:6px}
 .vend{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:3px 9px;font-size:12px;color:var(--dim);font-family:ui-monospace,Menlo,monospace}
@@ -90,9 +92,9 @@ ol.acts li:before{content:counter(s);position:absolute;left:-13px;top:0;width:26
 .acts .at{font-weight:700;font-size:15.5px}.acts .ad{color:var(--dim);font-size:14.5px;margin-top:4px}
 a.btn{display:inline-block;margin-top:9px;background:var(--panel2);border:1px solid var(--line);color:var(--accent);
   text-decoration:none;padding:8px 14px;border-radius:8px;font-size:13.5px;font-weight:600}
-a.btn:hover{border-color:var(--accent);background:rgba(94,234,212,.08)}
+a.btn:hover{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 9%,transparent)}
 .pri{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.09em;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:2px}
-.p1{background:rgba(94,234,212,.16);color:var(--accent)}.p2{background:rgba(147,160,180,.14);color:var(--dim)}
+.p1{background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent)}.p2{background:rgba(147,160,180,.14);color:var(--dim)}
 table{width:100%;border-collapse:collapse;font-size:13.5px}
 th{text-align:left;color:var(--dimmer);font-size:11px;letter-spacing:.09em;text-transform:uppercase;padding:0 8px 9px 0;font-weight:700}
 td{padding:9px 8px 9px 0;border-top:1px solid var(--line);vertical-align:top}
@@ -112,7 +114,7 @@ pre.doc{background:var(--bg);border:1px solid var(--line);border-radius:10px;pad
 .tiers{display:grid;grid-template-columns:1fr;gap:14px}
 @media(min-width:660px){.tiers{grid-template-columns:1fr 1fr}}
 .tier{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column}
-.tier.pro{border-color:rgba(94,234,212,.45);box-shadow:0 0 0 1px rgba(94,234,212,.12)}
+.tier.pro{border-color:color-mix(in srgb,var(--accent) 48%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 14%,transparent)}
 .tier h3{font-size:17px;font-weight:800;margin-bottom:3px}
 .tier .price{font-size:27px;font-weight:800;margin:8px 0 3px}
 .tier .per{font-size:12.5px;color:var(--dimmer);margin-bottom:13px}
@@ -126,7 +128,7 @@ pre.doc{background:var(--bg);border:1px solid var(--line);border-radius:10px;pad
 .tips li:before{content:"→";position:absolute;left:4px;color:var(--accent);font-weight:800}
 .tips li b{color:var(--ink)}
 .pill{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 7px;border-radius:4px;background:rgba(248,113,113,.16);color:var(--danger);margin-left:6px;letter-spacing:.05em}
-.pill.g{background:rgba(94,234,212,.16);color:var(--accent)}
+.pill.g{background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent)}
 footer{color:var(--dimmer);font-size:12.5px;text-align:center;margin-top:32px;line-height:1.75}
 footer a{color:var(--dim)}
 .disc{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:20px;font-size:12.5px;color:var(--dimmer);line-height:1.65}
@@ -203,9 +205,9 @@ footer a{color:var(--dim)}
   <button class="ghost" id="instNo" style="color:var(--dimmer)">✕</button>
 </div>
 
-<script src="theme.js?v=4"></script>
-<script src="brokers.js?v=4"></script>
-<script src="app.js?v=4"></script>
-<script src="ui.js?v=4"></script>
+<script src="theme.js?v=5"></script>
+<script src="brokers.js?v=5"></script>
+<script src="app.js?v=5"></script>
+<script src="ui.js?v=5"></script>
 </body>
 </html>
