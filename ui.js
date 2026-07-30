@@ -47,12 +47,15 @@ function render(s,c,state,wrongName){
     if(c.arch.id==="bank") h+=tr("do","✓","If you're worried it's real, call the number on your card","Never a number from the text. Real banks never ask you to move money to a “safe account”.");
   }else{
     if(s.optWord&&!s.optIsPerSe){
-      h+=tr("do","✓",`Reply <b>STOP</b> — not “${esc(s.optWord)}”`,
+      h+=tr("dont","✕","Don't reply at all — this sender is signalling non-compliance",
+        `They told you to reply “${esc(s.optWord)}”, which is <b>not</b> one of the words federal rule <b>47 CFR § 64.1200(a)(10)</b> makes an automatic opt-out (<b>stop, quit, end, revoke, opt out, cancel, unsubscribe</b>). A sender steering you off the standard keyword is the same sender likely to treat any reply as proof a human reads this number — and confirmed-live numbers get resold. Don't hand them that. Block, report, and delete the record instead (below).`);
+      h+=tr("do","✓",`Only if you intend to pursue them: reply <b>STOP</b> — never “${esc(s.optWord)}”`,
         `Federal rule <b>47 CFR § 64.1200(a)(10)</b> lists the words that count as an opt-out automatically: <b>stop, quit, end, revoke, opt out, cancel, unsubscribe</b>. “${esc(s.optWord)}” is not one of them. Reply STOP and consent is <b>definitively revoked</b>; reply “${esc(s.optWord)}” and you're relying on a weaker “would a reasonable person understand it” test. The same rule says a sender <b>may not designate an exclusive means</b> of opting out — so they cannot require their word.`);
     }else if(s.optWord){
-      h+=tr("do","✓","Reply STOP",`“${esc(s.optWord)}” is on the FCC's automatic-opt-out list. Once sent, consent is definitively revoked and they have <b>ten business days</b> to stop.`);
+      h+=tr("do","✓","Replying STOP here is reasonable","“"+esc(s.optWord)+"” is on the FCC's automatic-opt-out list, so this sender is at least using the compliant keyword. Once sent, consent is definitively revoked and they have <b>ten business days</b> to stop. If they text again after that, it is worth $500–$1,500.");
     }else{
-      h+=tr("do","✓","Reply STOP anyway","There's no opt-out instruction here, but the rule doesn't require one. STOP is a per-se revocation under 47 CFR § 64.1200(a)(10) and starts the ten-business-day clock regardless.");
+      h+=tr("dont","✕","Don't reply — there's no opt-out offered at all",
+        "A commercial sender with no opt-out instruction is not running a compliant programme, so a reply is more likely to confirm your number is live than to stop anything. Report it and delete the underlying record instead.");
     }
     h+=tr("do","✓","Screenshot it before you do anything","Capture the message, the sender's number, and the date and time. If they text again after your STOP, that screenshot is the evidence — and the second message is where the money is.");
     h+=tr("dont","✕","Don't click the link, and don't confirm your name","Confirming you're the person named — or that you own the property — upgrades a guess in their database into a verified record.");
@@ -92,6 +95,9 @@ function render(s,c,state,wrongName){
   }
   if(c.arch.extra) h+=`<div class="note">${c.arch.extra}</div>`;
   h+=`</div>`;
+
+  /* THE FIND LAYER — locate the actual record */
+  h+=findSection(s);
 
   /* chain */
   h+=`<div class="sec"><h2>${T.h.chain}</h2><div class="chain">`;
@@ -174,6 +180,105 @@ function render(s,c,state,wrongName){
   /* ---- the pack CTA ---- */
   h+=packPitch(c);
   return h;
+}
+
+/* ------------------------- the find layer (UI) ---------------------------- */
+function findSection(s){
+  const sum=findingsSummary();
+  let h=`<div class="sec" id="findsec"><h2>${T.h.find}</h2>
+  <p style="color:var(--dim);font-size:15px">${T.findLead}</p>
+  <div class="row" style="margin-top:14px">
+    <div class="field"><label for="findPhone" style="font-size:13px">The number they texted <span style="color:var(--dimmer);font-weight:400">(yours)</span></label>
+      <input type="tel" id="findPhone" placeholder="302-588-5895" autocomplete="tel" inputmode="tel"></div>
+    <div class="field" style="flex:0 0 auto"><button class="go" id="startSweep">${T.findBtn}</button></div>
+  </div>
+  <div class="note" style="margin-top:12px"><b>Why you tap and not us.</b> Fifteen of these twenty sources block
+  automated requests with bot protection, and we will not defeat bot protection — so a server-side scraper would
+  quietly return nothing for most of them and we would be selling you a blank page. Your own browser is the one
+  fetcher that is not blocked, and it is looking up your own number. One tap each. What you find below gets quoted
+  verbatim into the deletion letters.</div>
+  <div id="sweep"></div></div>`;
+  return h;
+}
+
+function renderSweep(){
+  const p=phoneForms($("findPhone").value);
+  if(!p.ok){ $("sweep").innerHTML=`<div class="flag" style="margin-top:14px">Enter a 10-digit US number.</div>`; return; }
+  try{ sessionStorage.setItem("spamtrace_findphone",p.plain); }catch(e){}
+  const f=loadFindings(), sum=findingsSummary();
+  let h=`<div class="stats" style="margin-top:18px">
+    <div class="stat"><div class="n">${sum.listed.length}</div><div class="l">sources found publishing your number</div></div>
+    <div class="stat"><div class="n">${sum.checked}/${sum.total}</div><div class="l">sources checked so far</div></div>
+    <div class="stat"><div class="n">${sum.names.length}</div><div class="l">wrong names attached to you</div></div>
+    <div class="stat"><div class="n">${sum.addrs.length}</div><div class="l">wrong addresses attached to you</div></div>
+  </div>`;
+  if(sum.names.length||sum.addrs.length){
+    h+=`<div class="flag" style="margin-top:4px"><b>This is the record that produced your text.</b>
+    ${sum.names.length?`Names published against your number: <b>${sum.names.map(esc).join(", ")}</b>. `:""}
+    ${sum.addrs.length?`Addresses: <b>${sum.addrs.map(esc).join("; ")}</b>. `:""}
+    Every letter you generate below will now quote these specific entries and demand deletion rather than correction.</div>`;
+  }
+  h+=`<div class="scroll" style="margin-top:16px"><table><thead><tr>
+    <th>Source</th><th>Look</th><th>What did it show?</th><th>Remove</th></tr></thead><tbody>`;
+  FIND_SOURCES.forEach((src,i)=>{
+    const cur=f[src.n]||{};
+    const url=src.u(p);
+    const st=cur.status||"";
+    h+=`<tr>
+      <td><b>${esc(src.n)}</b>${src.auto?'':' <span class="pill" style="background:color-mix(in srgb,var(--dimmer) 22%,transparent);color:var(--dim)">browser only</span>'}
+        ${src.note?`<div style="color:var(--dimmer);font-size:11.5px;margin-top:2px">${esc(src.note)}</div>`:""}</td>
+      <td><a href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-look="${i}">open →</a></td>
+      <td>
+        <select data-st="${esc(src.n)}" style="padding:6px;font-size:12.5px">
+          <option value=""${st===""?" selected":""}>— not checked —</option>
+          <option value="listed"${st==="listed"?" selected":""}>Found my number</option>
+          <option value="clear"${st==="clear"?" selected":""}>Not listed</option>
+        </select>
+        <div ${st==="listed"?"":'style="display:none"'} data-detail="${esc(src.n)}">
+          <input type="text" data-names="${esc(src.n)}" placeholder="name(s) shown" value="${esc(cur.names||"")}" style="margin-top:5px;padding:6px;font-size:12.5px">
+          <input type="text" data-addrs="${esc(src.n)}" placeholder="address(es) shown" value="${esc(cur.addrs||"")}" style="margin-top:4px;padding:6px;font-size:12.5px">
+        </div>
+      </td>
+      <td><a href="${esc(src.rm)}" target="_blank" rel="noopener noreferrer">opt out →</a></td></tr>`;
+  });
+  h+=`</tbody></table></div>
+  <div style="margin-top:14px">
+    <button class="copy" id="dlEvidence">Download evidence log</button>
+    <button class="copy" id="clearFind" style="color:var(--dimmer)">Clear findings</button>
+  </div>`;
+  $("sweep").innerHTML=h;
+  wireSweep(p);
+}
+
+function wireSweep(p){
+  $("sweep").querySelectorAll("select[data-st]").forEach(sel=>{
+    sel.onchange=()=>{
+      const site=sel.getAttribute("data-st"), f=loadFindings();
+      const det=$("sweep").querySelector(`[data-detail="${site}"]`);
+      if(sel.value===""){ delete f[site]; if(det) det.style.display="none"; }
+      else {
+        const src=FIND_SOURCES.find(x=>x.n===site);
+        f[site]=Object.assign({},f[site]||{},{status:sel.value,url:src?src.u(p):""});
+        if(det) det.style.display = sel.value==="listed" ? "" : "none";
+      }
+      saveFindings(f); renderSweep();
+    };
+  });
+  const bind=(attr,key)=>$("sweep").querySelectorAll(`[${attr}]`).forEach(inp=>{
+    inp.oninput=()=>{ const site=inp.getAttribute(attr), f=loadFindings();
+      f[site]=Object.assign({},f[site]||{status:"listed"},{[key]:inp.value}); saveFindings(f); };
+  });
+  bind("data-names","names"); bind("data-addrs","addrs");
+  const dl=$("dlEvidence"); if(dl) dl.onclick=()=>{
+    const sum=findingsSummary();
+    let out=`SPAMTRACE EVIDENCE LOG — ${new Date().toISOString().slice(0,10)}\nNumber checked: ${p.dash}\n\n`;
+    out+=`Sources checked: ${sum.checked} of ${sum.total}\nSources publishing this number: ${sum.listed.length}\n\n`;
+    sum.listed.forEach(([site,v])=>{ out+=`${site}\n  url: ${v.url||""}\n  names: ${v.names||"(not recorded)"}\n  addresses: ${v.addrs||"(not recorded)"}\n\n`; });
+    if(sum.clear.length) out+=`Checked and NOT listed: ${sum.clear.map(([s])=>s).join(", ")}\n`;
+    out+=`\n${evidenceParagraph()}\n`;
+    download("spamtrace-evidence.txt",out);
+  };
+  const cf=$("clearFind"); if(cf) cf.onclick=()=>{ clearFindings(); renderSweep(); };
 }
 
 /* --------------------------- pack pitch + builder -------------------------- */
@@ -472,6 +577,14 @@ function run(){
   try{ sessionStorage.setItem("spamtrace_msg",t); }catch(e){}
   $("out").innerHTML=render(s,c,$("st").value,wrong);
   $("packout").innerHTML="";
+  const sw=$("startSweep");
+  if(sw){
+    let pre=""; try{ pre=sessionStorage.getItem("spamtrace_findphone")||""; }catch(e){}
+    if(pre) $("findPhone").value=phoneForms(pre).dash;
+    sw.onclick=renderSweep;
+    $("findPhone").addEventListener("keydown",e=>{ if(e.key==="Enter") renderSweep(); });
+    if(pre) renderSweep();
+  }
   const bp=$("buildPack");
   if(bp) bp.onclick=()=>{ $("packout").innerHTML=packForm();
     $("genPack").onclick=generatePack;

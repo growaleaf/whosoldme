@@ -228,6 +228,8 @@ function requestBody(p, broker){
   L2.push(``);
   L2.push(`IDENTIFIERS — to locate my records:`);
   idl.forEach(x=>L2.push(`  ${x}`));
+  const ev=(typeof evidenceParagraph==="function")?evidenceParagraph():"";
+  if(ev){ L2.push(``); L2.push(ev); }
   if(p.wrongName && p.wrongNameValue){
     L2.push(``);
     L2.push(`IMPORTANT — DATA ACCURACY: my telephone number appears in third-party records associated with the name "${p.wrongNameValue}", who is not me. That association is incorrect and appears to result from a reassigned telephone number. If your records link this number to that name, they are inaccurate. Please delete the record rather than merging it with mine, and do not use it to build an identity or household association.`);

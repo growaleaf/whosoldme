@@ -42,9 +42,12 @@ sold: {
     pack:"Delete yourself at the source",
     details:"Your details — never leaves this device",
     ready:n=>`Your removal pack — ${n} letters ready`,
+    find:"Find the actual record",
     tips:"Things that actually work",
     industry:"The industry, in its own numbers"
   },
+  findLead:"Now the part that matters: locating where this is actually written down. These twenty sources publish reverse-phone records — name, address, relatives — for free, indexed by search engines. Tap through them with your own number and record what each one shows. Whatever you find gets quoted verbatim into your deletion letters.",
+  findBtn:"Start the sweep →",
   badgeScam:"SCAM", badgeComm:"UNWANTED MARKETING",
   packBtn:"Build my removal pack →",
   genBtn:"Generate my letters →",
@@ -92,9 +95,12 @@ eat: {
     pack:"Clear out the whole kitchen",
     details:"Your details — they never leave this device",
     ready:n=>`Order up — ${n} letters plated`,
+    find:"Trace the recipe",
     tips:"House rules",
     industry:"The kitchen, by its own numbers"
   },
+  findLead:"Now the part that matters: finding where the recipe is written down. These twenty sources publish reverse-phone records — name, address, relatives — for free and indexed by search engines. Tap through them with your own number and note what each one is serving. Whatever you find gets quoted straight into your letters.",
+  findBtn:"Start the sweep →",
   badgeScam:"ROTTEN", badgeComm:"UNWANTED SERVING",
   packBtn:"Clear out the kitchen →",
   genBtn:"Plate up my letters →",
@@ -145,7 +151,7 @@ const T = pickTheme();
   set("msgLabel",T.inputLabel); set("msgHint",T.inputHint); set("go",T.cta);
   set("brandName",T.name);
   const mf=document.querySelector('link[rel="manifest"]');
-  if(mf) mf.setAttribute("href","manifest-"+T.id+".webmanifest?v=6");
+  if(mf) mf.setAttribute("href","manifest-"+T.id+".webmanifest?v=7");
   const ti=document.getElementById("touchIcon");
   if(ti) ti.setAttribute("href","icon-"+T.id+"-192.png");
 })();
