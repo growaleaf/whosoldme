@@ -264,9 +264,21 @@ function wireSweep(p){
       saveFindings(f); renderSweep();
     };
   });
+  /* Update the counters in place rather than re-rendering — a full re-render
+     would steal focus mid-typing, which is worse than a stale number. */
+  const refreshStats=()=>{
+    const sum=findingsSummary();
+    const ns=$("sweep").querySelectorAll(".stat .n");
+    if(ns.length>=4){
+      ns[0].textContent=sum.listed.length;
+      ns[1].textContent=`${sum.checked}/${sum.total}`;
+      ns[2].textContent=sum.names.length;
+      ns[3].textContent=sum.addrs.length;
+    }
+  };
   const bind=(attr,key)=>$("sweep").querySelectorAll(`[${attr}]`).forEach(inp=>{
     inp.oninput=()=>{ const site=inp.getAttribute(attr), f=loadFindings();
-      f[site]=Object.assign({},f[site]||{status:"listed"},{[key]:inp.value}); saveFindings(f); };
+      f[site]=Object.assign({},f[site]||{status:"listed"},{[key]:inp.value}); saveFindings(f); refreshStats(); };
   });
   bind("data-names","names"); bind("data-addrs","addrs");
   const dl=$("dlEvidence"); if(dl) dl.onclick=()=>{

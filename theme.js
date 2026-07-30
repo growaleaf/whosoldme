@@ -151,7 +151,7 @@ const T = pickTheme();
   set("msgLabel",T.inputLabel); set("msgHint",T.inputHint); set("go",T.cta);
   set("brandName",T.name);
   const mf=document.querySelector('link[rel="manifest"]');
-  if(mf) mf.setAttribute("href","manifest-"+T.id+".webmanifest?v=7");
+  if(mf) mf.setAttribute("href","manifest-"+T.id+".webmanifest?v=8");
   const ti=document.getElementById("touchIcon");
   if(ti) ti.setAttribute("href","icon-"+T.id+"-192.png");
 })();

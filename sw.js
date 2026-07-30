@@ -1,7 +1,7 @@
 /* Spamtrace service worker — offline-first for a tool people need when
    they're standing in a parking lot with a bad text and one bar of signal. */
 const CACHE = "spamtrace-v7";
-const ASSETS = ["./","./index.html","./theme.js?v=7","./app.js?v=7","./ui.js?v=7","./brokers.js?v=7","./find.js?v=7",
+const ASSETS = ["./","./index.html","./theme.js?v=8","./app.js?v=8","./ui.js?v=8","./brokers.js?v=8","./find.js?v=8",
                 "./manifest-sold.webmanifest","./manifest-eat.webmanifest",
                 "./icon-sold-192.png","./icon-sold-512.png","./icon-eat-192.png","./icon-eat-512.png"];
 self.addEventListener("install", e => {
